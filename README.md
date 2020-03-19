@@ -1,1 +1,1 @@
-# ML2020SPRING
+# NTU - Machine Learning (2020 Spring)
