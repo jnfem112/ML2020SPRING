@@ -5,7 +5,7 @@ import cv2
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from CNN import CNN
+from model import CNN
 import matplotlib.pyplot as plt
 
 activation = None

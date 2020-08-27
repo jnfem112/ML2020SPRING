@@ -3,10 +3,9 @@ import os
 import numpy as np
 import torch
 import torch.nn as nn
-from CNN import CNN
+from model import CNN
 from torch.optim import Adam
 import matplotlib.pyplot as plt
-from time import time
 
 activation = None
 
@@ -15,6 +14,8 @@ def my_argparse():
 	parser.add_argument('--cuda' , type = str , default = '0')
 	parser.add_argument('--layer' , type = int)
 	parser.add_argument('--filter' , type = int)
+	parser.add_argument('--learning_rate' , type = float , default = 1)
+	parser.add_argument('--epoch' , type = int , default = 200)
 	parser.add_argument('--output_directory' , type = str)
 	parser.add_argument('--output_file' , type = str)
 	args = parser.parse_args()
@@ -22,8 +23,8 @@ def my_argparse():
 
 def filter_visualization(model , device , args):
 	# Hyper-parameter.
-	learning_rate = 1
-	epoch = 200
+	learning_rate = args.learning_rate
+	epoch = args.epoch
 
 	def hook(model , input , output):
 		global activation

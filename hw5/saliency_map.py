@@ -5,7 +5,7 @@ import cv2
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from CNN import CNN
+from model import CNN
 import matplotlib.pyplot as plt
 
 def my_argparse():
@@ -21,7 +21,7 @@ def my_argparse():
 def load_data(args):
 	image = cv2.imread(os.path.join(args.image_directory , args.image_name) , cv2.IMREAD_COLOR)
 	image = cv2.resize(image , (128 , 128) , interpolation = cv2.INTER_CUBIC)
-	label = int(image_name.split('_')[0])
+	label = int(args.image_name.split('_')[0])
 	return (image , label)
 
 def saliency_map(image , label , model , device):
@@ -33,8 +33,8 @@ def saliency_map(image , label , model , device):
 	model.eval()
 	criterion = nn.CrossEntropyLoss()
 
-	y = model(image)
-	loss = criterion(y , label)
+	output = model(image)
+	loss = criterion(output , label)
 	loss.backward()
 	saliency = image.grad.abs()
 

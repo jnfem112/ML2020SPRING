@@ -5,7 +5,7 @@ import cv2
 import torch
 import torch.nn as nn
 from torchvision import transforms
-from CNN import CNN
+from model import CNN
 from skimage.segmentation import slic
 from lime import lime_image
 import matplotlib.pyplot as plt
@@ -23,7 +23,7 @@ def my_argparse():
 def load_data(args):
 	image = cv2.imread(os.path.join(args.image_directory , args.image_name) , cv2.IMREAD_COLOR)
 	image = cv2.resize(image , (128 , 128) , interpolation = cv2.INTER_CUBIC)
-	label = int(image_name.split('_')[0])
+	label = int(args.image_name.split('_')[0])
 	return (image , label)
 
 def classifier_fn(image):
@@ -35,9 +35,9 @@ def classifier_fn(image):
 	model.load_state_dict(torch.load('CNN.pkl' , map_location = device))
 	model.to(device)
 	model.eval()
-	y = model(image)
-	y = y.cpu().detach().numpy()
-	return y
+	output = model(image)
+	output = output.cpu().detach().numpy()
+	return output
 
 def segmentation_fn(image):
 	return slic(image , n_segments = 100 , compactness = 1 , sigma = 1)

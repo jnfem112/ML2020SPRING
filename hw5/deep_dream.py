@@ -4,9 +4,9 @@ import numpy as np
 import cv2
 import torch
 import torch.nn as nn
-from torchvision import transforms , models
+from torchvision import transforms
+from model import CNN
 from torch.optim import Adam
-from CNN import CNN
 import matplotlib.pyplot as plt
 
 activation = None
