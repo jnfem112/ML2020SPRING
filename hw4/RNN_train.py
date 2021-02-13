@@ -17,7 +17,7 @@ def train(train_x , train_y , validation_x , validation_y , model , device , arg
 	learning_rate = args.learning_rate
 	epoch = args.epoch
 
-	train_loader = get_dataloader(train_x , train_y , 'train' , batch_size)
+	train_dataloader = get_dataloader(train_x , train_y , 'train' , batch_size)
 	model.to(device)
 	optimizer = Adam(model.parameters() , lr = learning_rate)
 	criterion = nn.BCELoss()
@@ -26,7 +26,7 @@ def train(train_x , train_y , validation_x , validation_y , model , device , arg
 		count = 0
 		total_loss = 0
 		start = time()
-		for (j , (data , label)) in enumerate(train_loader):
+		for (j , (data , label)) in enumerate(train_dataloader):
 			(data , label) = (data.to(device , dtype = torch.long) , label.to(device , dtype = torch.float))
 			optimizer.zero_grad()
 			output = model(data)
@@ -38,7 +38,7 @@ def train(train_x , train_y , validation_x , validation_y , model , device , arg
 			loss.backward()
 			optimizer.step()
 			end = time()
-			print_progress(i + 1 , epoch , train_x.shape[0] , batch_size , j + 1 , len(train_loader) , int(end - start) , total_loss / train_x.shape[0] , count / train_x.shape[0])
+			print_progress(i + 1 , epoch , train_x.shape[0] , batch_size , j + 1 , len(train_dataloader) , int(end - start) , total_loss / train_x.shape[0] , count / train_x.shape[0])
 
 		if ((i + 1) % 1 == 0):
 			evaluate(validation_x , validation_y , model , device)
@@ -48,7 +48,7 @@ def train(train_x , train_y , validation_x , validation_y , model , device , arg
 def evaluate(validation_x , validation_y , model , device):
 	global max_accuracy
 
-	validation_loader = get_dataloader(validation_x , validation_y , 'validation')
+	validation_dataloader = get_dataloader(validation_x , validation_y , 'validation')
 	model.to(device)
 	model.eval()
 	criterion = nn.BCELoss()
@@ -56,7 +56,7 @@ def evaluate(validation_x , validation_y , model , device):
 	total_loss = 0
 	start = time()
 	with torch.no_grad():
-		for (data , label) in validation_loader:
+		for (data , label) in validation_dataloader:
 			(data , label) = (data.to(device , dtype = torch.long) , label.to(device , dtype = torch.float))
 			output = model(data)
 			output = output.squeeze()

@@ -6,12 +6,12 @@ from data import load_data , dump
 from model import RNN
 
 def test(test_x , model , device):
-	test_loader = get_dataloader(test_x , None , 'test')
+	test_dataloader = get_dataloader(test_x , None , 'test')
 	model.to(device)
 	model.eval()
 	test_y = list()
 	with torch.no_grad():
-		for data in test_loader:
+		for data in test_dataloader:
 			data = data.to(device , dtype = torch.long)
 			output = model(data)
 			output = output.squeeze()

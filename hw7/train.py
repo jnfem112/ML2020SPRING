@@ -25,7 +25,7 @@ def knowledge_distillation(train_x , train_y , validation_x , validation_y , tea
 	learning_rate = args.learning_rate
 	epoch = args.epoch
 
-	train_loader = get_dataloader(train_x , train_y , 'train' , batch_size)
+	train_dataloader = get_dataloader(train_x , train_y , 'train' , batch_size)
 	teacher_net.to(device)
 	student_net.to(device)
 	teacher_net.eval()
@@ -36,7 +36,7 @@ def knowledge_distillation(train_x , train_y , validation_x , validation_y , tea
 		count = 0
 		total_loss = 0
 		start = time()
-		for (j , (data , label)) in enumerate(train_loader):
+		for (j , (data , label)) in enumerate(train_dataloader):
 			(data , label) = (data.to(device) , label.to(device))
 			optimizer.zero_grad()
 			with torch.no_grad():
@@ -49,7 +49,7 @@ def knowledge_distillation(train_x , train_y , validation_x , validation_y , tea
 			loss.backward()
 			optimizer.step()
 			end = time()
-			print_progress(i + 1 , epoch , len(train_x) , batch_size , j + 1 , len(train_loader) , int(end - start) , total_loss / len(train_x) , count / len(train_x))
+			print_progress(i + 1 , epoch , len(train_x) , batch_size , j + 1 , len(train_dataloader) , int(end - start) , total_loss / len(train_x) , count / len(train_x))
 
 		if ((i + 1) % 10 == 0):
 			accuracy = evaluate(validation_x , validation_y , teacher_net , student_net , device)
@@ -60,7 +60,7 @@ def knowledge_distillation(train_x , train_y , validation_x , validation_y , tea
 	return student_net
 
 def evaluate(validation_x , validation_y , teacher_net , student_net , device):
-	validation_loader = get_dataloader(validation_x , validation_y , 'validation')
+	validation_dataloader = get_dataloader(validation_x , validation_y , 'validation')
 	teacher_net.to(device)
 	student_net.to(device)
 	teacher_net.eval()
@@ -69,7 +69,7 @@ def evaluate(validation_x , validation_y , teacher_net , student_net , device):
 	total_loss = 0
 	start = time()
 	with torch.no_grad():
-		for (data , label) in validation_loader:
+		for (data , label) in validation_dataloader:
 			(data , label) = (data.to(device) , label.to(device))
 			teacher_output = teacher_net(data)
 			student_output = student_net(data)

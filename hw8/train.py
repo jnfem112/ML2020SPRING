@@ -25,7 +25,7 @@ def train(train_x , train_y , validation_x , validation_y , dictionary , model ,
 	learning_rate = args.learning_rate
 	epoch = args.epoch
 
-	train_loader = get_dataloader(train_x , train_y , 'train' , batch_size)
+	train_dataloader = get_dataloader(train_x , train_y , 'train' , batch_size)
 	model.to(device)
 	optimizer = Adam(model.parameters() , lr = learning_rate)
 	criterion = nn.CrossEntropyLoss(ignore_index = dictionary.token2index_chinese['<PAD>'])
@@ -34,7 +34,7 @@ def train(train_x , train_y , validation_x , validation_y , dictionary , model ,
 		model.train()
 		total_loss = 0
 		start = time()
-		for (j , (input , target)) in enumerate(train_loader):
+		for (j , (input , target)) in enumerate(train_dataloader):
 			(input , target) = (input.to(device) , target.to(device))
 			optimizer.zero_grad()
 			teacher_forcing_ratio = scheduled_sampling(i , base = 1 , decay = 1 / epoch , threshold = 0 , method = 'linear')
@@ -47,7 +47,7 @@ def train(train_x , train_y , validation_x , validation_y , dictionary , model ,
 			loss.backward()
 			optimizer.step()
 			end = time()
-			print_progress(i + 1 , epoch , train_x.shape[0] , batch_size , j + 1 , len(train_loader) , int(end - start) , total_loss / train_x.shape[0])
+			print_progress(i + 1 , epoch , train_x.shape[0] , batch_size , j + 1 , len(train_dataloader) , int(end - start) , total_loss / train_x.shape[0])
 
 		if ((i + 1) % 5 == 0):
 			score = evaluate(validation_x , validation_y , dictionary , model , device , args)
@@ -58,7 +58,7 @@ def train(train_x , train_y , validation_x , validation_y , dictionary , model ,
 	return model
 
 def evaluate(validation_x , validation_y , dictionary , model , device , args):
-	validation_loader = get_dataloader(validation_x , validation_y , 'validation' , batch_size = 1)
+	validation_dataloader = get_dataloader(validation_x , validation_y , 'validation' , batch_size = 1)
 	model.to(device)
 	model.eval()
 	criterion = nn.CrossEntropyLoss(ignore_index = dictionary.token2index_chinese['<PAD>'])
@@ -66,7 +66,7 @@ def evaluate(validation_x , validation_y , dictionary , model , device , args):
 	total_score = 0
 	start = time()
 	with torch.no_grad():
-		for (input , target) in validation_loader:
+		for (input , target) in validation_dataloader:
 			(input , target) = (input.to(device) , target.to(device))
 			(output , predict) = model.inference(input , target , args.beam_size)
 			output = output.reshape(-1 , output.size(dim = 2))

@@ -17,7 +17,7 @@ def FGSM(original_image , original_label , proxy_model , device , args):
 	new_image = list()
 	new_label = list()
 	for (i , (image , label)) in enumerate(dataloader):
-		print('image {} '.format(i + 1) , end = '')
+		print('image {}'.format(i + 1) , end = ' ')
 		start = time()
 		(image , label) = (image.to(device) , label.to(device))
 		image.requires_grad = True
@@ -28,7 +28,7 @@ def FGSM(original_image , original_label , proxy_model , device , args):
 		if (index[0].item() == label.item()):
 			image = image + epsilon * torch.sign(image.grad)
 		end = time()
-		print('({}s) '.format(int(end - start)))
+		print('({}s)'.format(int(end - start)))
 
 		output = proxy_model(image)
 		(_ , index) = torch.max(output , dim = 1)
@@ -51,7 +51,7 @@ def BIM(original_image , original_label , proxy_model , device , args):
 	new_image = list()
 	new_label = list()
 	for (i , (image , label)) in enumerate(dataloader):
-		print('image {} '.format(i + 1) , end = '')
+		print('image {}'.format(i + 1) , end = ' ')
 		start = time()
 		(image , label) = (image.to(device) , label.to(device))
 		while True:
@@ -65,7 +65,7 @@ def BIM(original_image , original_label , proxy_model , device , args):
 			else:
 				image = nn.Parameter(image + epsilon * torch.sign(image.grad))
 		end = time()
-		print('({}s) '.format(int(end - start)))
+		print('({}s)'.format(int(end - start)))
 
 		image = image.cpu().detach().squeeze(dim = 0).numpy()
 		image = deprocess(image)

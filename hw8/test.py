@@ -7,7 +7,7 @@ from data import load_dataset , deprocess , dump
 from model import Encoder , Decoder , Seq2Seq
 
 def test(test_x , test_y , dictionary , model , device , args):
-	test_loader = get_dataloader(test_x , test_y , 'test' , batch_size = 1)
+	test_testloader = get_dataloader(test_x , test_y , 'test' , batch_size = 1)
 	model.to(device)
 	model.eval()
 	criterion = nn.CrossEntropyLoss(ignore_index = dictionary.token2index_chinese['<PAD>'])
@@ -16,7 +16,7 @@ def test(test_x , test_y , dictionary , model , device , args):
 	predicts = list()
 	start = time()
 	with torch.no_grad():
-		for (input , target) in test_loader:
+		for (input , target) in test_testloader:
 			(input , target) = (input.to(device) , target.to(device))
 			(output , predict) = model.inference(input , target , args.beam_size)
 			output = output.reshape(-1 , output.size(dim = 2))

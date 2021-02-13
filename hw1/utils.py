@@ -17,9 +17,9 @@ def print_progress(epoch , total_epoch , total_data , batch_size , batch , total
 		data = batch * batch_size
 		length = int(50 * data / total_data)
 		bar = length * '=' + '>' + (49 - length) * ' '
-		print('epoch {}/{} ({}/{}) [{}]'.format(epoch , total_epoch , data , total_data , bar) , end = '\r')
+		print('\repoch {}/{} ({}/{}) [{}]'.format(epoch , total_epoch , data , total_data , bar) , end = '')
 	else:
 		data = total_data
 		bar = 50 * '='
-		print('epoch {}/{} ({}/{}) [{}] ({}s) train RMSE : {:.5f} , validation RMSE : {:.5f}'.format(epoch , total_epoch , data , total_data , bar , total_time , train_RMSE , validation_RMSE))
+		print('\repoch {}/{} ({}/{}) [{}] ({}s) train RMSE : {:.5f} , validation RMSE : {:.5f}'.format(epoch , total_epoch , data , total_data , bar , total_time , train_RMSE , validation_RMSE))
 	return
