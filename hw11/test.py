@@ -18,7 +18,7 @@ def main(args):
 	if (args.model == 'SNGAN'):
 		model = SNGAN(args.input_dim)
 	model.generator.load_state_dict(torch.load(args.checkpoint))
-	input = Variable(torch.randn(100 , input_dim))
+	input = Variable(torch.randn(100 , args.input_dim))
 	image = model.inference(input)
 	save_image(image , args.output_image , nrow = 10)
 	return

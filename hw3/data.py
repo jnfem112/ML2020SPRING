@@ -24,7 +24,7 @@ def load_dataset(train_directory , validation_directory , test_directory):
 		(validation_x , validation_y) = load_data(validation_directory , True)
 		return (train_x , train_y , validation_x , validation_y)
 	else:
-		test_x load_data(test_directory , False)
+		test_x = load_data(test_directory , False)
 		return test_x
 
 def dump(predict , output_file):

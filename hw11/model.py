@@ -283,7 +283,7 @@ class WGAN():
 				if (not self.GP):
 					loss_discriminator = -torch.mean(real_output) + torch.mean(fake_output)
 				else:
-					loss_discriminator = -torch.mean(real_output) + torch.mean(fake_output) + lambd * gradient_penalty(real_image , fake_image)
+					loss_discriminator = -torch.mean(real_output) + torch.mean(fake_output) + lambd * self.gradient_penalty(real_image , fake_image)
 				total_loss_discriminator += loss_discriminator.item()
 				loss_discriminator.backward()
 				optimizer_discriminator.step()

@@ -5,7 +5,7 @@ from sklearn.decomposition import KernelPCA
 from sklearn.manifold import TSNE
 from sklearn.cluster import MiniBatchKMeans
 from utils import my_argparse , set_random_seed , get_dataloader
-from data import load_data
+from data import load_data , dump
 from model import Autoencoder
 
 def cluster(dataset , model , device , args):
